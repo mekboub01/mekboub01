@@ -1,7 +1,15 @@
-import { type User } from "@prisma/client";
-import { Controller, Get, Query, Route } from "tsoa";
+import { Body, Controller, Delete, Get, Path, Post, Query, Route } from "tsoa";
 
 import { db } from "../../db";
+
+type User = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+type UserCreatePayload = Pick<User, "firstName" | "lastName" | "email">;
 
 @Route("/users")
 export class UserController extends Controller {
@@ -13,6 +21,20 @@ export class UserController extends Controller {
     return db.user.findMany({
       skip: (page - 1) * limit,
       take: limit,
+    });
+  }
+
+  @Delete("/:id")
+  async deleteUser(@Path() id: string): Promise<void> {
+    await db.user.delete({
+      where: { id },
+    });
+  }
+
+  @Post("")
+  async createUser(@Body() body: UserCreatePayload): Promise<User> {
+    return db.user.create({
+      data: body,
     });
   }
 }
