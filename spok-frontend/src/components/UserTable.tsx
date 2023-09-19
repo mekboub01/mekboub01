@@ -25,6 +25,7 @@ interface UserTableProps {
   users: User[];
 }
 export function UserTable(props: UserTableProps) {
+  
   return (
     <table
       style={{
@@ -42,12 +43,17 @@ export function UserTable(props: UserTableProps) {
       </thead>
       <tbody>
         {props.users.map((user) => (
-          <tr key={user.email} className={StylesStatus[user.status]}>
+          <tr
+            key={user.email}
+            className={StylesStatus[user.status || InscriptionStatuts.Demande]}
+          >
             <td>{user.firstName}</td>
             <td>{user.lastName}</td>
             <td>{user.email}</td>
             <th>
-              <img src={trash} alt="Supprimer" width={32} height={32} />
+              <button onClick={() => handDeleteUser(user)}>
+                <img src={trash} alt="Supprimer" width={32} height={32} />
+              </button>
             </th>
           </tr>
         ))}
